@@ -1,6 +1,6 @@
 # Intent Classification and Slot Filling for Privacy Policies
 
-Code pre-release of our work on [Intent Classification and Slot Filling for Privacy Policies](). 
+Code pre-release of our work on [Intent Classification and Slot Filling for Privacy Policies](https://arxiv.org/abs/2101.00123). 
 
 - We propose a new dataset called PolicyIE in this work. 
 - PolicyIE provides annotations of privacy practices and text spans for sentences in policy documents. 
@@ -70,7 +70,7 @@ We acknowledge the efforts of the authors of the following repositories.
 #### Citation
 
 ```
-@article{ahmad-etal-2020-policyie,
+@article{ahmad-etal-2021-policyie,
     title = "Intent Classification and Slot Filling for Privacy Policies",
     author = "Ahmad, Wasi  and
       Chi, Jianfeng  and
@@ -78,7 +78,7 @@ We acknowledge the efforts of the authors of the following repositories.
       Norton, Thomas and
       Tian, Yuan  and
       Chang, Kai-Wei",
-    journal={arXiv preprint arXiv:?},
-    year={2020}
+    journal={arXiv preprint arXiv:2101.00123},
+    year={2021}
 }
 ```
