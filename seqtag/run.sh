@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-BASE_DIR=/local/wasiahmad/workspace/projects/PrivacyIE/seqtag
-#BASE_DIR=/zf18/jc6ub/Project/PrivacyIE/seqtag
-DATA_DIR=${BASE_DIR}/data
+export PYTHONIOENCODING=utf-8;
+CURRENT_DIR=`pwd`
+HOME_DIR=`realpath ..`
 
 AVAILABLE_MODEL_CHOICES=(
     bert
@@ -15,9 +15,9 @@ AVAILABLE_MODEL_CHOICES=(
 )
 
 GPU=${1:-0}
-TASK=${2:-entity}
+SLOT_TYPE=${2:-type_I}
 MODEL_TYPE=${3:-bert}
-USE_CRF=${4:-false} # --use_crf
+USE_CRF=${4:-false}
 SEED=${5:-1111}
 
 if [[ $USE_CRF == true ]]; then
@@ -28,7 +28,9 @@ fi
 
 export CUDA_VISIBLE_DEVICES=$GPU
 
-SAVE_DIR=${BASE_DIR}/outputs/${TASK}_${MODEL_TYPE}${SUFFIX}_s${SEED}
+EMBED_DIR=${HOME_DIR}/data
+DATA_DIR=${HOME_DIR}/data/bio_format
+SAVE_DIR=${CURRENT_DIR}/outputs/${SLOT_TYPE}_${MODEL_TYPE}${SUFFIX}_s${SEED}
 mkdir -p $SAVE_DIR
 
 
@@ -48,16 +50,16 @@ fi
 if [[ $MODEL_TYPE == 'feature' ]]; then
     LR=1e-3
     NUM_EPOCHS=20
-    EMBED_FILE="--embed_file ${DATA_DIR}/polisis-300d-137M-subword.txt"
-    USE_POSTAG="--use_postag" # USE_POSTAG=""
+    EMBED_FILE="--embed_file ${EMBED_DIR}/polisis-300d-137M-subword.txt"
+    USE_POSTAG="--use_postag"
 fi
 
 python main.py \
     --seed $SEED \
-    --task $TASK \
+    --task $SLOT_TYPE \
     --data_dir $DATA_DIR \
     --intent_label_file ${DATA_DIR}/intent_label.txt \
-    --slot_label_file ${DATA_DIR}/${TASK}_slot_label.txt \
+    --slot_label_file ${DATA_DIR}/${SLOT_TYPE}_slot_label.txt \
     --postag_label_file ${DATA_DIR}/postag_label.txt \
     --model_type $MODEL_TYPE \
     --model_dir $SAVE_DIR \
@@ -80,10 +82,10 @@ python main.py \
 function evaluate () {
 
 python main.py \
-    --task $TASK \
+    --task $SLOT_TYPE \
     --data_dir $DATA_DIR \
     --intent_label_file ${DATA_DIR}/intent_label.txt \
-    --slot_label_file ${DATA_DIR}/${TASK}_slot_label.txt \
+    --slot_label_file ${DATA_DIR}/${SLOT_TYPE}_slot_label.txt \
     --postag_label_file ${DATA_DIR}/postag_label.txt \
     --model_type $MODEL_TYPE \
     --max_seq_len 384 \
@@ -98,10 +100,10 @@ while getopts ":h" option; do
     case $option in
       h) # display Help
         echo
-        echo "Syntax: run.sh GPU_ID TASK MODEL"
+        echo "Syntax: run.sh GPU_ID SLOT_TYPE MODEL"
         echo
         echo "GPU_ID    A list of gpu ids, separated by comma. e.g., '0,1'"
-        echo "TASK      Name of the task. choices: [entity|complex]"
+        echo "SLOT_TYPE Name of the task. choices: [type_I|type_II]"
         echo "MODEL     Model name; choices: [$(IFS=\| ; echo "${AVAILABLE_MODEL_CHOICES[*]}")]"
         echo
         exit;;

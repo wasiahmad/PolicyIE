@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-BASE_DIR=/local/wasiahmad/workspace/projects/PrivacyIE/mass
-DATA_DIR=${BASE_DIR}/data
+export PYTHONIOENCODING=utf-8;
+CURRENT_DIR=`pwd`
+HOME_DIR=`realpath ..`
+
+DATA_DIR=${CURRENT_DIR}/resources
+LABEL_DIR=${HOME_DIR}/data/policyie
 
 GPU=${1:-0}
 MODEL_SIZE=${2:-base}
@@ -29,7 +33,7 @@ NUM_GPUS=${#GPU_IDS[@]}
 EFFECT_BSZ=$((UPDATE_FREQ*BATCH_SIZE*NUM_GPUS))
 
 DIR_SUFFIX=${ARCH}-lr${LR}-ms${MAX_STEPS}-ws${WARMUP_STEPS}-bsz${EFFECT_BSZ}-s${SEED}
-SAVE_DIR=${BASE_DIR}/outputs/${DIR_SUFFIX}
+SAVE_DIR=${CURRENT_DIR}/outputs/${DIR_SUFFIX}
 mkdir -p $SAVE_DIR
 DATA_PATH=${DATA_DIR}/${MODEL_SIZE}-binary
 
@@ -77,8 +81,7 @@ fairseq-generate $DATA_PATH \
 --batch-size 64 \
 --beam 1 \
 --min-len 1 \
---max-len-b 256 \
-2>&1 | tee $SAVE_DIR/decode_out.log;
+--max-len-b 256 2>&1 | tee $SAVE_DIR/decode_out.log;
 
 grep ^S $SAVE_DIR/decode_out.log | cut -f1 > $SAVE_DIR/ids.txt;
 grep ^H $SAVE_DIR/decode_out.log | cut -f3- > $SAVE_DIR/hypotheses.txt;
@@ -95,8 +98,6 @@ rm $SAVE_DIR/ids.txt && rm $SAVE_DIR/hypotheses.txt;
 
 function evaluate () {
 
-LABEL_DIR=../data/within_sentence_annot
-
 python evaluate.py \
 --references $DATA_DIR/test.target \
 --hypotheses $SAVE_DIR/predictions.txt \
@@ -106,6 +107,7 @@ python evaluate.py \
 --output_file $SAVE_DIR/eval_results.txt;
 
 }
+
 
 while getopts ":h" option; do
     case $option in

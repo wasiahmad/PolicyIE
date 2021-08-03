@@ -1,12 +1,12 @@
 # Intent Classification and Slot Filling for Privacy Policies
 
-Code pre-release of our work on [Intent Classification and Slot Filling for Privacy Policies](https://arxiv.org/abs/2101.00123). 
+Official code release of our work on [Intent Classification and Slot Filling for Privacy Policies](https://aclanthology.org/2021.acl-long.340/). 
 
 - We propose a new dataset called PolicyIE in this work. 
 - PolicyIE provides annotations of privacy practices and text spans for sentences in policy documents. 
 - We refer to predicting privacy practice as *intent classification* and identifying the text spans as *slot filling*. 
 
-**[NOTE]** We will publish the data upon acceptance of our paper.
+**[NOTE]** The PolicyIE dataset is available [here](https://github.com/wasiahmad/PolicyIE/blob/main/data/sanitized_split.zip).
 
 
 ### Dependencies
@@ -18,9 +18,18 @@ Code pre-release of our work on [Intent Classification and Slot Filling for Priv
 - pytorch-crf==0.7.2
 
 
+### Data Preparation
+
+```bash
+cd data
+bash prepare.sh
+```
+
+
 ### Models
 
-We studied the following two alternative modeling approaches as baselines in our work. 
+We studied the following two alternative modeling approaches as baselines in our work. We refer the readers to the 
+paper for more details about the models and experiment results.
 
 
 #### Joint Intent and Slot Tagging
@@ -38,7 +47,8 @@ Data-Collection-Usage O O O O O O O O O O O O O O B-P.AM I-P.AM I-P.AM I-P.AM I-
 
 - **[Models]** BiLSTM, Transformer, [BERT](https://arxiv.org/abs/1810.04805), [RoBERTa](https://arxiv.org/abs/1907.11692)
 - Implementations are available at https://github.com/wasiahmad/PolicyIE/tree/main/seqtag.
-
+- Go to the `seqtag` directory and use the `run.sh` script for model training and evaluation. Run `bash run.sh -h` to 
+learn about the command line arguments.
 
 
 #### Sequence-to-sequence Learning
@@ -53,8 +63,8 @@ We may also use or display your username and icon or profile photo on marketing 
 
 - **[Models]** [UniLM](https://arxiv.org/pdf/1905.03197.pdf), [UniLMv2](https://arxiv.org/pdf/2002.12804.pdf), [MiniLM](https://arxiv.org/pdf/2002.10957.pdf), [BART](https://arxiv.org/pdf/1910.13461.pdf)
 - Implementations are available at https://github.com/wasiahmad/PolicyIE/tree/main/{bart,mass,unilm}.
-
-We refer the readers to the paper for more details about the models and experiment results.
+- Go to the corresponding model directory and use the `prepare.sh` script to prepare data and `run.sh` script for 
+model training and evaluation. Run `bash run.sh -h` to learn about the command line arguments.
 
 
 #### Acknowledgement
@@ -70,15 +80,21 @@ We acknowledge the efforts of the authors of the following repositories.
 #### Citation
 
 ```
-@article{ahmad-etal-2021-policyie,
+@inproceedings{ahmad-etal-2021-intent,
     title = "Intent Classification and Slot Filling for Privacy Policies",
     author = "Ahmad, Wasi  and
       Chi, Jianfeng  and
-      Le, Tu and
-      Norton, Thomas and
+      Le, Tu  and
+      Norton, Thomas  and
       Tian, Yuan  and
       Chang, Kai-Wei",
-    journal={arXiv preprint arXiv:2101.00123},
-    year={2021}
+    booktitle = "Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)",
+    month = aug,
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2021.acl-long.340",
+    doi = "10.18653/v1/2021.acl-long.340",
+    pages = "4402--4417",
 }
 ```

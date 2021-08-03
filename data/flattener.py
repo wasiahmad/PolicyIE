@@ -10,13 +10,13 @@ def load_data(dir_path, split):
                 'length': len(line.split())
             }
 
-    with open('{}/{}/seq_entity.out'.format(dir_path, split)) as f:
+    with open('{}/{}/seq_type_I.out'.format(dir_path, split)) as f:
         for idx, line in enumerate(f):
             tokens = line.split()
             data[idx]['entity'] = tokens
             assert data[idx]['length'] == len(tokens)
 
-    with open('{}/{}/seq_complex.out'.format(dir_path, split)) as f:
+    with open('{}/{}/seq_type_II.out'.format(dir_path, split)) as f:
         for idx, line in enumerate(f):
             tokens = line.split()
             data[idx]['complex'] = tokens

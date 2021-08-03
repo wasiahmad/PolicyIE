@@ -143,8 +143,8 @@ class JointProcessor(object):
 
 
 processors = {
-    "entity": JointProcessor,
-    "complex": JointProcessor,
+    "type_I": JointProcessor,
+    "type_II": JointProcessor,
 }
 
 

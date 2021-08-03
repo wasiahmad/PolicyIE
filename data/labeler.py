@@ -25,7 +25,7 @@ def vocab_process(data_dir):
             f_w.write(intent + '\n')
 
     # slot
-    for suffix in ["entity", "complex"]:
+    for suffix in ["type_I", "type_II"]:
         with open(os.path.join(train_dir, 'seq_{}.out'.format(suffix)), 'r', encoding='utf-8') as f_r, \
                 open(os.path.join(data_dir, '{}_{}'.format(suffix, slot_label_vocab)), 'w', encoding='utf-8') as f_w:
             slot_vocab = set()
@@ -50,11 +50,11 @@ def vocab_process(data_dir):
             open(os.path.join(data_dir, postag_label_vocab), 'w', encoding='utf-8') as f_w:
         postag_vocab = set()
         for line in f_r:
-                line = line.strip()
-                postags = line.split()
-                for postag in postags:
-                    postag_vocab.add(postag)
-                    
+            line = line.strip()
+            postags = line.split()
+            for postag in postags:
+                postag_vocab.add(postag)
+
         # Write additional tokens
         additional_tokens = ["PAD", "UNK"]
         for token in additional_tokens:
@@ -63,6 +63,7 @@ def vocab_process(data_dir):
         postag_vocab = sorted(list(postag_vocab))
         for postag in postag_vocab:
             f_w.write(postag + '\n')
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="write output to annotations")

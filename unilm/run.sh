@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-BASE_DIR=/local/wasiahmad/workspace/projects/PrivacyIE/unilm
-DATA_DIR=${BASE_DIR}/data
+export PYTHONIOENCODING=utf-8;
+CURRENT_DIR=`pwd`
+HOME_DIR=`realpath ..`
+
+DATA_DIR=${CURRENT_DIR}/resources
+LABEL_DIR=${HOME_DIR}/data/policyie
 
 #https://github.com/microsoft/unilm/tree/master/s2s-ft#pre-trained-models
 AVAILABLE_MODEL_CHOICES=(
@@ -65,14 +69,14 @@ NUM_GPUS=${#GPU_IDS[@]}
 EFFECT_BSZ=$((GRADIENT_ACCUMULATION_STEPS*PER_GPU_TRAIN_BATCH_SIZE*NUM_GPUS))
 
 DIR_SUFFIX=${MODEL_CHOICE}-lr${LR}-ms${NUM_TRAIN_STEPS}-ws${NUM_WARM_STEPS}-bsz${EFFECT_BSZ}-s${SEED}
-OUTPUT_DIR=${BASE_DIR}/outputs/${DIR_SUFFIX}
+OUTPUT_DIR=${CURRENT_DIR}/outputs/${DIR_SUFFIX}
 mkdir -p $OUTPUT_DIR
 
 
 function train () {
 
 # folder used to cache package dependencies
-CACHE_DIR=~/.cache/torch/transformers
+CACHE_DIR=${HOME_DIR}/.cache/torch/transformers
 LOG_FILENAME=${OUTPUT_DIR}/train_log.txt
 
 python s2s-ft/run_seq2seq.py \
@@ -124,14 +128,12 @@ python s2s-ft/decode_seq2seq.py \
 function evaluate () {
 
 SPLIT=test
-LABEL_DIR=../data/within_sentence_annot
-
 python evaluate.py \
 --references $DATA_DIR/test.target \
 --hypotheses $OUTPUT_DIR/$CKPT_NAME.$SPLIT \
 --intent_label $LABEL_DIR/intent_label.txt \
---entity_arg $LABEL_DIR/entity_slot_label.txt \
---complex_arg $LABEL_DIR/complex_slot_label.txt \
+--type_I_arg $LABEL_DIR/type_I_slot_label.txt \
+--type_II_arg $LABEL_DIR/type_II_slot_label.txt \
 --output_file $OUTPUT_DIR/eval_results.txt;
 
 }
