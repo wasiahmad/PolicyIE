@@ -67,7 +67,7 @@ We may also use or display your username and icon or profile photo on marketing 
 model training and evaluation. Run `bash run.sh -h` to learn about the command line arguments.
 
 
-#### Acknowledgement
+### Acknowledgement
 
 We acknowledge the efforts of the authors of the following repositories.
 
@@ -77,7 +77,7 @@ We acknowledge the efforts of the authors of the following repositories.
 - https://github.com/pytorch/fairseq/tree/master/examples/bart
 
 
-#### Citation
+### Citation
 
 ```
 @inproceedings{ahmad-etal-2021-intent,
